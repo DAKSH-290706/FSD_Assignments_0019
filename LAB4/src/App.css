@@ -1,0 +1,427 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f8fafc;
+  color: #202938;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+  height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 8%;
+
+  background: #ffffff;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 100;
+
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+}
+
+.logo h2 {
+  color: #087f8c;
+}
+
+nav {
+  display: flex;
+  gap: 28px;
+}
+
+nav a {
+  text-decoration: none;
+
+  color: #344054;
+
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+nav a:hover {
+  color: #087f8c;
+}
+
+/* ================= BANNER ================= */
+
+.banner {
+  min-height: 550px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 70px 10%;
+
+  background:
+    linear-gradient(
+      120deg,
+      #087f8c,
+      #38a3a5
+    );
+
+  color: white;
+}
+
+.banner-content {
+  max-width: 650px;
+}
+
+.tagline {
+  font-size: 13px;
+
+  letter-spacing: 4px;
+
+  font-weight: bold;
+}
+
+.banner-content h1 {
+  font-size: 62px;
+
+  margin: 18px 0;
+}
+
+.banner-content p {
+  max-width: 600px;
+
+  font-size: 18px;
+
+  line-height: 1.7;
+}
+
+.banner-content button {
+  margin-top: 30px;
+
+  padding: 15px 30px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: white;
+
+  color: #087f8c;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.banner-content button:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= PROGRAMS ================= */
+
+.programs {
+  padding: 80px 10%;
+
+  text-align: center;
+
+  background: white;
+}
+
+.programs h2 {
+  font-size: 34px;
+
+  margin-bottom: 15px;
+}
+
+.program-intro {
+  max-width: 650px;
+
+  margin: auto;
+
+  color: #667085;
+
+  line-height: 1.7;
+}
+
+.program-list {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 25px;
+
+  margin-top: 45px;
+}
+
+.program-card {
+  width: 280px;
+
+  padding: 35px 25px;
+
+  background: #f8fafc;
+
+  border-radius: 14px;
+
+  border: 1px solid #e5e7eb;
+
+  transition: 0.25s;
+}
+
+.program-card:hover {
+  transform: translateY(-7px);
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.09);
+}
+
+.program-icon {
+  display: block;
+
+  font-size: 42px;
+
+  margin-bottom: 15px;
+}
+
+.program-card h3 {
+  margin-bottom: 12px;
+}
+
+.program-card p {
+  color: #667085;
+
+  line-height: 1.6;
+}
+
+/* ================= SIGNUP ================= */
+
+.signup-section {
+  padding: 80px 20px;
+
+  background: #e9f7f7;
+}
+
+.signup-card {
+  max-width: 520px;
+
+  margin: auto;
+
+  padding: 40px;
+
+  background: white;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.09);
+}
+
+.signup-card h2 {
+  font-size: 30px;
+
+  margin-bottom: 10px;
+}
+
+.signup-card > p {
+  color: #667085;
+
+  line-height: 1.6;
+
+  margin-bottom: 28px;
+}
+
+/* ================= FORM ================= */
+
+form {
+  display: flex;
+
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 7px;
+
+  font-weight: bold;
+
+  color: #344054;
+}
+
+input,
+select {
+  padding: 13px;
+
+  margin-bottom: 19px;
+
+  border: 1px solid #d0d5dd;
+
+  border-radius: 7px;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition: 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: #087f8c;
+
+  box-shadow:
+    0 0 0 3px rgba(8, 127, 140, 0.1);
+}
+
+form button {
+  padding: 14px;
+
+  margin-top: 5px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #087f8c;
+
+  color: white;
+
+  font-size: 16px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+form button:hover {
+  background: #066b76;
+
+  transform: translateY(-2px);
+}
+
+/* ================= MESSAGE ================= */
+
+.message-box {
+  position: fixed;
+
+  top: 88px;
+
+  right: 25px;
+
+  max-width: 350px;
+
+  padding: 15px 22px;
+
+  background: #202938;
+
+  color: white;
+
+  border-radius: 8px;
+
+  z-index: 1000;
+
+  box-shadow:
+    0 6px 22px rgba(0, 0, 0, 0.2);
+
+  animation: messageAppear 0.3s ease;
+}
+
+@keyframes messageAppear {
+  from {
+    transform: translateX(110%);
+
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+
+    opacity: 1;
+  }
+}
+
+/* ================= FOOTER ================= */
+
+.site-footer {
+  padding: 35px 20px;
+
+  text-align: center;
+
+  background: #17252a;
+
+  color: white;
+}
+
+.site-footer h3 {
+  margin-bottom: 10px;
+}
+
+.site-footer p {
+  margin-top: 8px;
+
+  color: #cbd5e1;
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 700px) {
+
+  .navbar {
+    padding: 0 5%;
+  }
+
+  nav {
+    gap: 14px;
+  }
+
+  nav a {
+    font-size: 14px;
+  }
+
+  .banner {
+    padding: 60px 7%;
+  }
+
+  .banner-content h1 {
+    font-size: 44px;
+  }
+
+  .banner-content p {
+    font-size: 17px;
+  }
+
+  .program-list {
+    flex-direction: column;
+
+    align-items: center;
+  }
+
+  .program-card {
+    width: 90%;
+  }
+
+  .signup-card {
+    padding: 28px;
+  }
+
+  .message-box {
+    left: 20px;
+
+    right: 20px;
+  }
+}
