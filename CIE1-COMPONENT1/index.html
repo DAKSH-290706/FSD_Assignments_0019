@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MediCare Hospital Management System">
+  <title>MediCare Hospital Management System</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- =========================================================================
+       MAIN SPA APPLICATION CONTAINER
+       ========================================================================= -->
+  <div id="appContainer" class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside id="appSidebar" class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand-name">MediCare HMS</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a id="nav-dashboard" href="#" class="nav-item active" onclick="App.navigateTo('dashboard'); return false;">Dashboard</a>
+        <a id="nav-patients" href="#" class="nav-item" onclick="App.navigateTo('patients'); return false;">Patients</a>
+        <a id="nav-appointments" href="#" class="nav-item" onclick="App.navigateTo('appointments'); return false;">Appointments</a>
+        <a id="nav-records" href="#" class="nav-item" onclick="App.navigateTo('records'); return false;">Medical Records</a>
+        <a id="nav-prescriptions" href="#" class="nav-item" onclick="App.navigateTo('prescriptions'); return false;">Prescriptions</a>
+        <a id="nav-doctors" href="#" class="nav-item" onclick="App.navigateTo('doctors'); return false;">Doctors</a>
+        <a id="nav-departments" href="#" class="nav-item" onclick="App.navigateTo('departments'); return false;">Departments</a>
+        <a id="nav-staff" href="#" class="nav-item" onclick="App.navigateTo('staff'); return false;">Staff</a>
+        <a id="nav-billing" href="#" class="nav-item" onclick="App.navigateTo('billing'); return false;">Billing</a>
+      </nav>
+    </aside>
+
+
+    <!-- Main Page Content Wrapper -->
+    <div class="app-main-content">
+
+      <!-- Header Navbar -->
+      <header class="app-header">
+        <div class="header-left">
+          <button id="sidebarToggleBtn" class="sidebar-toggle-btn" title="Toggle Navigation">Menu</button>
+        </div>
+
+        <div class="header-right">
+          <!-- Theme Toggle -->
+          <button class="btn btn-outline btn-sm" title="Toggle Light/Dark Theme" onclick="SettingsModule.toggleTheme()">Theme</button>
+
+          <!-- User Profile Menu -->
+          <div id="userProfileMenu" class="user-profile-menu">
+            <div id="userHeaderAvatar" class="user-avatar">A</div>
+            <div class="user-info">
+              <span id="userHeaderName" class="user-name">Admin User</span>
+              <span id="userHeaderRole" class="user-role">Administrator</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+
+      <!-- =========================================================================
+           MAIN MODULE VIEWS
+           ========================================================================= -->
+      <main>
+
+        <!-- A. DASHBOARD VIEW -->
+        <div id="view-dashboard" class="view-container">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Dashboard</h1>
+              <p class="page-subtitle">Hospital metrics overview</p>
+            </div>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-content">
+                <p>Total Patients</p>
+                <div id="kpiTotalPatients" class="stat-number">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-content">
+                <p>Active Doctors</p>
+                <div id="kpiTotalDoctors" class="stat-number">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-content">
+                <p>Today's Appointments</p>
+                <div id="kpiTodayAppointments" class="stat-number">0</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-content">
+                <p>Total Revenue</p>
+                <div id="kpiTotalRevenue" class="stat-number">₹0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Bar -->
+          <div class="quick-actions-bar">
+            <button class="btn btn-primary" onclick="PatientModule.openAddModal()">+ Add Patient</button>
+            <button class="btn btn-secondary" onclick="AppointmentModule.openBookModal()">+ Book Appointment</button>
+            <button class="btn btn-secondary" onclick="DoctorModule.openAddModal()">+ Add Doctor</button>
+            <button class="btn btn-secondary" onclick="BillingModule.openAddModal()">+ Generate Bill</button>
+          </div>
+
+          <!-- Recent Appointments Table -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Recent Appointments</h3>
+              <button class="btn btn-outline btn-sm" onclick="App.navigateTo('appointments')">View All</button>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Patient Name</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recentAppointmentsTbody">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- B. PATIENTS VIEW -->
+        <div id="view-patients" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Patients</h1>
+              <p class="page-subtitle">Patient directory</p>
+            </div>
+            <button class="btn btn-primary" onclick="PatientModule.openAddModal()">+ Add Patient</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="patientSearchInput" placeholder="Search patients...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="patientDeptFilter" class="form-control" style="width: auto;">
+                <option value="ALL">All Departments</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Patient ID</th>
+                  <th>Full Name</th>
+                  <th>Age / Gender</th>
+                  <th>Blood Group</th>
+                  <th>Phone Number</th>
+                  <th>Department</th>
+                  <th>Registered</th>
+                </tr>
+              </thead>
+              <tbody id="patientsTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- C. DOCTORS VIEW -->
+        <div id="view-doctors" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Doctors</h1>
+              <p class="page-subtitle">Doctor directory</p>
+            </div>
+            <button class="btn btn-primary" onclick="DoctorModule.openAddModal()">+ Add Doctor</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="doctorSearchInput" placeholder="Search doctors...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="doctorDeptFilter" class="form-control" style="width: auto;">
+                <option value="ALL">All Departments</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Doctor ID</th>
+                  <th>Doctor Name</th>
+                  <th>Specialization</th>
+                  <th>Department</th>
+                  <th>Experience</th>
+                  <th>Fee (₹)</th>
+                  <th>Available Slots</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="doctorsTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- D. APPOINTMENTS VIEW -->
+        <div id="view-appointments" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Appointments</h1>
+              <p class="page-subtitle">Schedule appointments</p>
+            </div>
+            <button class="btn btn-primary" onclick="AppointmentModule.openBookModal()">+ Book Appointment</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="aptSearchInput" placeholder="Search appointments...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="aptDeptFilter" class="form-control" style="width: auto;">
+                <option value="ALL">All Departments</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>APT ID</th>
+                  <th>Patient</th>
+                  <th>Doctor</th>
+                  <th>Department</th>
+                  <th>Date</th>
+                  <th>Time Slot</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- E. MEDICAL RECORDS VIEW -->
+        <div id="view-records" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Medical Records</h1>
+              <p class="page-subtitle">Clinical notes</p>
+            </div>
+            <button class="btn btn-primary" onclick="MedicalRecordModule.openAddModal()">+ Add Medical Record</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="recordSearchInput" placeholder="Search records...">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Record ID</th>
+                  <th>Patient Name</th>
+                  <th>Doctor</th>
+                  <th>Visit Date</th>
+                  <th>Diagnosis</th>
+                  <th>Follow-up Date</th>
+                </tr>
+              </thead>
+              <tbody id="recordsTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- F. PRESCRIPTIONS VIEW -->
+        <div id="view-prescriptions" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Prescriptions</h1>
+              <p class="page-subtitle">Issued medicine prescriptions</p>
+            </div>
+            <button class="btn btn-primary" onclick="PrescriptionModule.openAddModal()">+ Create Prescription</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="prescriptionSearchInput" placeholder="Search prescriptions...">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Prescription ID</th>
+                  <th>Patient Name</th>
+                  <th>Doctor</th>
+                  <th>Date</th>
+                  <th>Medicines Count</th>
+                </tr>
+              </thead>
+              <tbody id="prescriptionsTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- G. BILLING & INVOICES VIEW -->
+        <div id="view-billing" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Billing & Invoices</h1>
+              <p class="page-subtitle">Patient invoices</p>
+            </div>
+            <button class="btn btn-primary" onclick="BillingModule.openAddModal()">+ Generate Bill</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="billingSearchInput" placeholder="Search invoices...">
+            </div>
+            <div class="toolbar-filters">
+              <select id="billingStatusFilter" class="form-control" style="width: auto;">
+                <option value="ALL">All Statuses</option>
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bill ID</th>
+                  <th>Patient Name</th>
+                  <th>Date</th>
+                  <th>Total Amount (₹)</th>
+                  <th>Payment Method</th>
+                  <th>Payment Status</th>
+                </tr>
+              </thead>
+              <tbody id="billingTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <!-- H. DEPARTMENTS VIEW -->
+        <div id="view-departments" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Departments</h1>
+              <p class="page-subtitle">Hospital departments overview</p>
+            </div>
+          </div>
+
+          <div id="departmentsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+
+        <!-- I. STAFF VIEW -->
+        <div id="view-staff" class="view-container hidden">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Staff</h1>
+              <p class="page-subtitle">Hospital staff members</p>
+            </div>
+            <button class="btn btn-primary" onclick="StaffModule.openAddModal()">+ Add Staff</button>
+          </div>
+
+          <div class="table-toolbar">
+            <div class="toolbar-search">
+              <input type="text" id="staffSearchInput" placeholder="Search staff...">
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Staff ID</th>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Department</th>
+                  <th>Phone</th>
+                  <th>Shift Schedule</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="staffTbody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       REUSABLE MODALS
+       ========================================================================= -->
+
+  <!-- Patient Modal -->
+  <div id="patientModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="patientModalTitle" class="modal-title">Add New Patient</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('patientModal')">X</button>
+      </div>
+      <form id="patientForm" onsubmit="PatientModule.savePatient(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Patient ID</label>
+              <input type="text" id="patientIdField" class="form-control" readonly style="background: var(--bg-main);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" id="patientName" class="form-control" required placeholder="e.g. Rahul Sharma">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" id="patientDob" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Age</label>
+              <input type="number" id="patientAge" class="form-control" placeholder="Age" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select id="patientGender" class="form-control">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Blood Group</label>
+              <select id="patientBloodGroup" class="form-control">
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="patientPhone" class="form-control" required placeholder="9876543210">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" id="patientEmail" class="form-control" placeholder="patient@example.com">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select id="patientDepartment" class="form-control">
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine" selected>General Medicine</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Registration Date</label>
+              <input type="date" id="patientRegDate" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <input type="text" id="patientAddress" class="form-control" placeholder="Address">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Emergency Contact</label>
+              <input type="text" id="patientEmergencyName" class="form-control" placeholder="Contact person">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emergency Phone</label>
+              <input type="tel" id="patientEmergencyPhone" class="form-control" placeholder="Phone">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Medical History</label>
+            <textarea id="patientMedicalHistory" class="form-control" rows="2" placeholder="Past conditions..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Allergies</label>
+            <input type="text" id="patientAllergies" class="form-control" placeholder="Allergies...">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('patientModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Patient</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Doctor Add/Edit Modal -->
+  <div id="doctorModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="doctorModalTitle" class="modal-title">Add New Doctor</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('doctorModal')">X</button>
+      </div>
+      <form id="doctorForm" onsubmit="DoctorModule.saveDoctor(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Doctor ID</label>
+              <input type="text" id="doctorIdField" class="form-control" readonly style="background: var(--bg-main);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Doctor Name <span class="required">*</span></label>
+              <input type="text" id="doctorName" class="form-control" required placeholder="Dr. Priya Nair">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Specialization <span class="required">*</span></label>
+              <input type="text" id="doctorSpecialization" class="form-control" required placeholder="Cardiologist">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select id="doctorDepartment" class="form-control">
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Qualification</label>
+              <input type="text" id="doctorQualification" class="form-control" placeholder="MBBS, MD">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience</label>
+              <input type="text" id="doctorExperience" class="form-control" placeholder="8 years">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone <span class="required">*</span></label>
+              <input type="tel" id="doctorPhone" class="form-control" required placeholder="9876512345">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" id="doctorEmail" class="form-control" placeholder="doctor@medicare.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Consultation Fee (₹)</label>
+              <input type="number" id="doctorFee" class="form-control" value="800" min="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Available Days</label>
+              <input type="text" id="doctorAvailableDays" class="form-control" placeholder="Mon, Wed, Fri">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Available Time</label>
+              <input type="text" id="doctorAvailableTime" class="form-control" placeholder="09:00 AM - 01:00 PM">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="doctorStatus" class="form-control">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('doctorModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Doctor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Appointment Booking Modal -->
+  <div id="appointmentModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="aptModalTitle" class="modal-title">Book Appointment</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('appointmentModal')">X</button>
+      </div>
+      <form id="appointmentForm" onsubmit="AppointmentModule.saveAppointment(event)">
+        <div class="modal-body">
+          <input type="hidden" id="aptIdField">
+
+          <div class="form-group">
+            <label class="form-label">Select Patient <span class="required">*</span></label>
+            <select id="aptModalPatient" class="form-control" required></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Department <span class="required">*</span></label>
+              <select id="aptModalDept" class="form-control">
+                <option value="Cardiology">Cardiology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Select Doctor <span class="required">*</span></label>
+              <select id="aptModalDoctor" class="form-control" required></select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Appointment Date <span class="required">*</span></label>
+              <input type="date" id="aptModalDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time Slot <span class="required">*</span></label>
+              <select id="aptModalTime" class="form-control" required>
+                <option value="09:00 AM">09:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="02:00 PM">02:00 PM</option>
+                <option value="03:00 PM">03:00 PM</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Reason for Visit</label>
+            <input type="text" id="aptModalReason" class="form-control" placeholder="Reason for consultation">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea id="aptModalNotes" class="form-control" rows="2" placeholder="Additional notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('appointmentModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm Appointment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Medical Record Add Modal -->
+  <div id="recordModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Medical Record</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('recordModal')">X</button>
+      </div>
+      <form id="recordForm" onsubmit="MedicalRecordModule.saveRecord(event)">
+        <div class="modal-body">
+          <input type="hidden" id="recordIdField">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Select Patient <span class="required">*</span></label>
+              <select id="recordPatient" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Attending Doctor <span class="required">*</span></label>
+              <select id="recordDoctor" class="form-control" required></select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Visit Date <span class="required">*</span></label>
+              <input type="date" id="recordVisitDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Follow-up Date</label>
+              <input type="date" id="recordFollowUp" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Symptoms <span class="required">*</span></label>
+            <textarea id="recordSymptoms" class="form-control" rows="2" required placeholder="Symptoms reported..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Diagnosis <span class="required">*</span></label>
+            <input type="text" id="recordDiagnosis" class="form-control" required placeholder="Diagnosis">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Treatment Plan</label>
+            <textarea id="recordTreatment" class="form-control" rows="2" placeholder="Treatment plan..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Doctor Notes</label>
+            <textarea id="recordNotes" class="form-control" rows="2" placeholder="Notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('recordModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Prescription Add Modal -->
+  <div id="prescriptionModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 700px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Create Prescription</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('prescriptionModal')">X</button>
+      </div>
+      <form id="prescriptionForm" onsubmit="PrescriptionModule.savePrescription(event)">
+        <div class="modal-body">
+          <input type="hidden" id="prescriptionIdField">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Patient <span class="required">*</span></label>
+              <select id="prescriptionPatient" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Prescribing Doctor <span class="required">*</span></label>
+              <select id="prescriptionDoctor" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date <span class="required">*</span></label>
+              <input type="date" id="prescriptionDate" class="form-control" required>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+            <label class="form-label" style="margin: 0;">Medicines</label>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="PrescriptionModule.addMedicineRow()">+ Add Medicine Row</button>
+          </div>
+
+          <div id="medicineRowsContainer">
+            <!-- Dynamic Medicine Rows -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('prescriptionModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Prescription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Billing Add Modal -->
+  <div id="billingModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Generate Invoice</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('billingModal')">X</button>
+      </div>
+      <form id="billingForm" onsubmit="BillingModule.saveBill(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Invoice ID</label>
+              <input type="text" id="billIdField" class="form-control" readonly style="background: var(--bg-main);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Patient <span class="required">*</span></label>
+              <select id="billPatient" class="form-control" required></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input type="date" id="billDate" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Consultation Fee (₹)</label>
+              <input type="number" id="billConsultation" class="form-control" value="800" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lab Charges (₹)</label>
+              <input type="number" id="billLab" class="form-control" value="1200" min="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Medicine Charges (₹)</label>
+              <input type="number" id="billMedicine" class="form-control" value="450" min="0">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Other Charges (₹)</label>
+              <input type="number" id="billOther" class="form-control" value="150" min="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tax Rate (%)</label>
+              <input type="number" id="billTax" class="form-control" value="5" min="0" max="100">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Discount Amount (₹)</label>
+              <input type="number" id="billDiscount" class="form-control" value="100" min="0">
+            </div>
+          </div>
+
+          <!-- Total Display Card -->
+          <div style="background: var(--primary-subtle); border: 1px solid var(--primary-light); padding: 14px; border-radius: 8px; margin-top: 12px;">
+            <div style="display: flex; justify-content: space-between; font-size: 13px;">
+              <span>Subtotal:</span>
+              <span id="billSubtotalDisplay">₹2,600</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; color: var(--primary); margin-top: 6px; border-top: 1px solid var(--border-color); padding-top: 6px;">
+              <span>TOTAL AMOUNT:</span>
+              <span id="billTotalDisplay">₹2,630</span>
+            </div>
+          </div>
+
+          <div class="form-row" style="margin-top: 16px;">
+            <div class="form-group">
+              <label class="form-label">Payment Method</label>
+              <select id="billPaymentMethod" class="form-control">
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="UPI / QR">UPI / QR</option>
+                <option value="Cash">Cash</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Payment Status</label>
+              <select id="billPaymentStatus" class="form-control">
+                <option value="Paid">Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('billingModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate Invoice</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Staff Modal -->
+  <div id="staffModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 id="staffModalTitle" class="modal-title">Add Staff Member</h3>
+        <button class="modal-close-btn" onclick="Utils.closeModal('staffModal')">X</button>
+      </div>
+      <form id="staffForm" onsubmit="StaffModule.saveStaff(event)">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Staff ID</label>
+              <input type="text" id="staffIdField" class="form-control" readonly style="background: var(--bg-main);">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Full Name <span class="required">*</span></label>
+              <input type="text" id="staffName" class="form-control" required placeholder="e.g. Sujata Roy">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Role <span class="required">*</span></label>
+              <select id="staffRole" class="form-control">
+                <option value="Nurse">Nurse</option>
+                <option value="Receptionist">Receptionist</option>
+                <option value="Lab Technician">Lab Technician</option>
+                <option value="Pharmacist">Pharmacist</option>
+                <option value="Accountant">Accountant</option>
+                <option value="Administrative Staff">Administrative Staff</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <select id="staffDepartment" class="form-control">
+                <option value="Cardiology">Cardiology</option>
+                <option value="Pathology">Pathology</option>
+                <option value="Administration">Administration</option>
+                <option value="Pharmacy">Pharmacy</option>
+                <option value="General Medicine">General Medicine</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Phone <span class="required">*</span></label>
+              <input type="tel" id="staffPhone" class="form-control" required placeholder="9876000001">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" id="staffEmail" class="form-control" placeholder="staff@medicare.com">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Joining Date</label>
+              <input type="date" id="staffJoiningDate" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Shift Schedule</label>
+              <select id="staffShift" class="form-control">
+                <option value="Morning (07:00 AM - 03:00 PM)">Morning (07:00 AM - 03:00 PM)</option>
+                <option value="General (09:00 AM - 05:00 PM)" selected>General (09:00 AM - 05:00 PM)</option>
+                <option value="Evening (02:00 PM - 10:00 PM)">Evening (02:00 PM - 10:00 PM)</option>
+                <option value="Night (10:00 PM - 06:00 AM)">Night (10:00 PM - 06:00 AM)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="Utils.closeModal('staffModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Staff</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+
+  <!-- =========================================================================
+       JAVASCRIPT MODULE IMPORTS IN DEPENDENCY ORDER
+       ========================================================================= -->
+  <script src="js/data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/patients.js"></script>
+  <script src="js/doctors.js"></script>
+  <script src="js/appointments.js"></script>
+  <script src="js/records.js"></script>
+  <script src="js/prescriptions.js"></script>
+  <script src="js/billing.js"></script>
+  <script src="js/departments.js"></script>
+  <script src="js/staff.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
