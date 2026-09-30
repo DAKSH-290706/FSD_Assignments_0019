@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Child</title>
+</head>
+
+<body>
+
+    <h1>Add Child</h1>
+
+    <form action="/users/<%= user._id %>/children" method="POST">
+
+        <label>First Name:</label>
+        <input type="text" name="firstName" required>
+
+        <br><br>
+
+        <label>Last Name:</label>
+        <input type="text" name="lastName" required>
+
+        <br><br>
+
+        <label>Age:</label>
+        <input type="number" name="age" required>
+
+        <br><br>
+
+        <label>Email:</label>
+        <input type="email" name="email">
+
+        <br><br>
+
+        <button type="submit">Add Child</button>
+
+    </form>
+
+</body>
+</html>
